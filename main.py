@@ -47,7 +47,13 @@ def handle_message(message):
 def user_validation(message):
     conn = mysql.connector.connect(host=secrets.db_host, user=secrets.db_user, password=secrets.db_password, database=secrets.db)
     cursor = conn.cursor()
-    query = "SELECT Name, Last_name, Phone, Email, Age FROM Workers WHERE Phone = %s OR Email = %s"
+    main_query = "SELECT Name, Last_name, Phone, Email, Age FROM Workers WHERE Phone = %s OR Email = %s"
+    check_querry = 'SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = \'mysql\' AND table_name = \'Workers\''
+    create_querry = "CREATE TABLE IF NOT EXISTS Workers (Name varchar(50), Last_name varchar(50), Phone varchar(15), Email varchar(50), Age varchar(2))"
+    cursor.execute(check_querry)
+    status = cursor.fetchone()
+    if status[0] < 1:
+        cursor.execute(create_querry)
     if message.text.isdigit():
         phone = message.text
         email = None
@@ -55,7 +61,7 @@ def user_validation(message):
         phone = None
         email = message.text
 
-    cursor.execute(query, (phone, email))
+    cursor.execute(main_query, (phone, email))
     result = cursor.fetchone()
     if result:
         name, last_name, phone, email, age = result
