@@ -7,8 +7,10 @@ from datetime import datetime
 import re
 import mysql.connector
 import paramiko
+import secrets
 
-API_TOKEN = '7001780241:AAHSm40R8eKjdTT7zNyORizwhZm0k4voSSY'  # Замените на ваш токен
+
+API_TOKEN = secrets.token  # Замените на ваш токен
 
 
 bot = telebot.TeleBot(API_TOKEN)
@@ -43,7 +45,7 @@ def handle_message(message):
 
 #функции для бота
 def user_validation(message):
-    conn = mysql.connector.connect(host='host.docker.internal', user='root', password='3000', database="mysql")
+    conn = mysql.connector.connect(host=secrets.db_host, user=secrets.db_user, password=secrets.db_password, database=secrets.db)
     cursor = conn.cursor()
     query = "SELECT Name, Last_name, Phone, Email, Age FROM Workers WHERE Phone = %s OR Email = %s"
     if message.text.isdigit():
