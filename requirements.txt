@@ -1,0 +1,5 @@
+paramiko
+psutil
+python-telegram-bot
+pytelegrambotapi
+mysql-connector-python
