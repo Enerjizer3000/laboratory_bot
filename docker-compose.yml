@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 3000
+      MYSQL_DATABASE: mainbase
+    networks:
+      - my_network
+
+  python-app:
+    build: .
+    depends_on:
+      - mysql
+    networks:
+      - my_network
+
+networks:
+  my_network:
